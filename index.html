@@ -1,0 +1,28 @@
+function bukaLembarPenilaianSiswaLangsung() {
+    const tpKet = document.getElementById('tujuan-pembelajaran-keterampilan').value.trim();
+    const checkedKet = document.querySelectorAll('input[name="jenis-keterampilan"]:checked');
+    const alertBox = document.getElementById('alert-setup-keterampilan');
+
+    if (!tpKet || checkedKet.length === 0) {
+        alertBox.classList.remove('hidden');
+        alertBox.innerText = "Peringatan: Pilih jenis penilaian keterampilan dan isi Tujuan Pembelajaran Keterampilan!";
+        return;
+    }
+    alertBox.classList.add('hidden');
+
+    let ketArr = Array.from(checkedKet).map(cb => cb.value);
+    if (!jenisInfoMapel[activeMapelAndri]) jenisInfoMapel[activeMapelAndri] = {};
+    jenisInfoMapel[activeMapelAndri].ketList = ketArr;
+    jenisInfoMapel[activeMapelAndri].tpKetText = tpKet;
+
+    document.getElementById('label-mapel-eksekusi-pen').innerText = `Mata Pelajaran: ${activeMapelAndri}`;
+    
+    const today = getTodayKey();
+    if (!nilaiDataAndri[activeMapelAndri]) nilaiDataAndri[activeMapelAndri] = {};
+    if (!nilaiDataAndri[activeMapelAndri][today]) {
+        nilaiDataAndri[activeMapelAndri][today] = daftarSiswa.map(() => ({ penScores: {}, ketScores: {}, final: 0 }));
+    }
+
+    renderTabelFormPenilaianPengetahuan();
+    switchView('view-form-penilaian-pengetahuan');
+}
